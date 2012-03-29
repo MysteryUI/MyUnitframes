@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file='Unitframes.lua' />
+	<Script file='color.lua' />
+	<Script file='ButtonBorder.lua' />
+	<Script file='Classcolors.lua' />
+	<Script file='Guildtab.lua' />
+	<Script file='Raidfader.lua' />
+</Ui>
