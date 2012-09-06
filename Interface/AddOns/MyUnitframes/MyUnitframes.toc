@@ -1,10 +1,11 @@
-﻿## Interface: 40300
+﻿## Interface: 50001
 ## Author: Mystery
 ## Title: |cff777777|rMyUnitframes
-## Notes: Interface setup
-## Notes-zhCN: |cffbc8f8f增强美化|r|cffb70000暴雪系统头像。|r
-## Notes-zhTW: |cffbc8f8f增強美化|r|cffb70000暴雪系統頭像。|r
-## Version: V2+
+## Notes-zhCN: |cffbc8f8f系统头像|r|cffb70000增强|r
+## Notes-zhTW: |cffbc8f8f系統頭像|r|cffb70000增強|r
+## Version: V5
+## X-WoWBox-Ver: 1
+## X-WoWBox-ID: 3340
 
 
 ui.xml
