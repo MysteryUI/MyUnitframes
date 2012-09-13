@@ -23,7 +23,7 @@
     rowSpacing      = 7,
     colSpacing      = 7,
     buffsPerRow     = 10,
-    gap             = 240, --gap in pixel between buff and debuff
+    gap             = 80, --gap in pixel between buff and debuff
   }
 
   cfg.tempenchant = {
@@ -35,8 +35,8 @@
   }  
   
   cfg.textures = {
-    normal            = "Interface\\Addons\\MyUnitframes\\MyMedia\\gloss",
-    outer_shadow      = "Interface\\Addons\\MyUnitframes\\MyMedia\\outer_shadow",
+    normal            = "Interface\\Addons\\MysteryUI\\MyMedia\\gloss",
+    outer_shadow      = "Interface\\Addons\\MysteryUI\\MyMedia\\outer_shadow",
   }
   
   cfg.background = {
