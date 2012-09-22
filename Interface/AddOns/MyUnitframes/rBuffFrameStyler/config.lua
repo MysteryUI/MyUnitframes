@@ -22,8 +22,8 @@
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
     rowSpacing      = 7,
     colSpacing      = 7,
-    buffsPerRow     = 10,
-    gap             = 80, --gap in pixel between buff and debuff
+    buffsPerRow     = 8,
+    gap             = 20, --gap in pixel between buff and debuff
   }
 
   cfg.tempenchant = {
