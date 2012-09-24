@@ -1,4 +1,8 @@
 --界面框体增强
+
+SlashCmdList["RELOADUI"] = function() ReloadUI() end
+SLASH_RELOADUI1 = "/rl"--重载命令
+
 local _G = _G  --解决头像在换类似天赋，符文的时候出现暴雪禁用插件的情况。
 local _, class = UnitClass("player")
 
@@ -7,7 +11,7 @@ local _, class = UnitClass("player")
 ---------------------------------------------------
 UnitFrames = {}
 UnitFrames.config = {
-    SetPoint = false,                -- true or false 是否使用脚本重新定义的各个框体位置
+    SetPoint = false,               -- true or false 是否使用脚本重新定义的各个框体位置
     classTarget = false,            -- true or false 是否其他单位显示职业图标
     classColorPlayer = true,        -- true or false 是否渲染玩家职业框体颜色
     classColorTarget = true,        -- true or false 是否渲染目标职业框体颜色

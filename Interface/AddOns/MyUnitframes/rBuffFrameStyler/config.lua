@@ -35,8 +35,8 @@
   }  
   
   cfg.textures = {
-    normal            = "Interface\\Addons\\MysteryUI\\MyMedia\\gloss",
-    outer_shadow      = "Interface\\Addons\\MysteryUI\\MyMedia\\outer_shadow",
+    normal            = "Interface\\Addons\\MyUnitframes\\MyMedia\\gloss",
+    outer_shadow      = "Interface\\Addons\\MyUnitframes\\MyMedia\\outer_shadow",
   }
   
   cfg.background = {
