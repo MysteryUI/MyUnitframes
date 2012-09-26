@@ -13,13 +13,14 @@ UnitFrames = {}
 UnitFrames.config = {
     SetPoint = false,               -- true or false 是否使用脚本重新定义的各个框体位置
     classTarget = false,            -- true or false 是否其他单位显示职业图标
+	SetRune = false,                -- true or false 是否改变符文的样式和位置，（改变的话它将在屏幕中下位置以弧形排列）
     classColorPlayer = true,        -- true or false 是否渲染玩家职业框体颜色
     classColorTarget = true,        -- true or false 是否渲染目标职业框体颜色
     classColorFocus = true,         -- true or false 是否渲染焦点职业框体颜色
     classColorParty = true,         -- true or false 是否渲染队伍职业框体颜色
     repositionPartyText = false,    -- true or false 是否重新定位队伍文本
     largeAuraSize = 24,             -- Blizzard default value is 21
-    smallAuraSize = 20,             -- Blizzard default value is 17
+    smallAuraSize = 18,             -- Blizzard default value is 17
     customStatusText = true,        -- true or false (是否自定义状态文本)
     autoManaPercent = true,         -- true or false (是否用百分比显示法力值)
     thousandSeparators = true,      -- true or false  是否在1000...1000.000...1000.000.000的.上添加空位隔符
@@ -71,7 +72,10 @@ local function ScrewYouPlayerFrame()
 hooksecurefunc("PlayerFrame_AnimateOut", function() PlayerFrame:SetAlpha(0); ScrewYouPlayerFrame() end)
 hooksecurefunc("PlayerFrame_SequenceFinished", function() PlayerFrame:SetAlpha(1); ScrewYouPlayerFrame() end)
 hooksecurefunc("PlayerFrame_UpdateStatus", ScrewYouPlayerFrame)
-end
+else
+PartyMemberFrame1:ClearAllPoints() 
+PartyMemberFrame1:SetPoint("topleft", 10, -120)  --队伍的框体位置
+ end
 
 --[[ 缩放设置 ]]
 PlayerFrame:SetScale("1.0")
@@ -149,7 +153,7 @@ hooksecurefunc(FocusFrameSpellBar, "Show", function()
 end)
 FocusFrameSpellBar:SetStatusBarColor(0,0.45,0.9); FocusFrameSpellBar.SetStatusBarColor = function() end
 
-if UnitFrames.config.SetPoint then
+if UnitFrames.config.SetRune then
 --[[ 符文 ]]
 RuneFrame:ClearAllPoints() 
 RuneFrame:SetPoint("CENTER",UIParent,"CENTER",0,-170) --符文的框体位置
@@ -192,7 +196,7 @@ end
 ---------------------------------------------------
 if class == "PRIEST" then
     UnitFrames.config.largeAuraSize = 24
-    UnitFrames.config.smallAuraSize = 20
+    UnitFrames.config.smallAuraSize = 18
     UnitFrames.config.autoManaPercent = false
 end
 if class == "DRUID" then
