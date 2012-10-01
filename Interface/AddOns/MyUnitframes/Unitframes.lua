@@ -1,77 +1,130 @@
---½çÃæ¿òÌåÔöÇ¿
+ï»¿--ç•Œé¢æ¡†ä½“å¢å¼º
+
+local addonName, L = ...; 
+local function defaultFunc(L, key) 
+return key; 
+end 
+setmetatable(L, {__index=defaultFunc}); 
+
+ --å¤´åƒå¸ƒå±€åˆ‡æ¢è®¾ç½®ï¼š[PVPå¸ƒå±€:/My pvp]ï¼Œ[PVEå¸ƒå±€:/My pve] æ³¨æ„å‘½ä»¤åé¢çš„å¤§å°å†™å¿…é¡»ä¸€è‡´ï¼
+local function slashCommand(str)
+	if (str == 'pvp') then
+        MyUnitframesDB.PVE_Style = false 
+		MyUnitframesDB.PVP_Style = true
+		StaticPopup_Show("RELOAD")
+	elseif(str == 'pve') then
+		MyUnitframesDB.PVE_Style = true 
+		MyUnitframesDB.PVP_Style = false
+		StaticPopup_Show("RELOAD")
+	elseif(str == 'bz') then
+	    MyUnitframesDB = {} 
+		StaticPopup_Show("RELOAD")
+	end
+end
+
+local eventframe = CreateFrame'Frame'
+eventframe:RegisterEvent('ADDON_LOADED')
+
+eventframe:SetScript('OnEvent', function(self, event, name)
+	if(name ~= "MyUnitframes") then return end
+	self:UnregisterEvent('ADDON_LOADED')
+ 	SLASH_MyUnitframes1 = '/My'
+	SlashCmdList["MyUnitframes"] = function(str) slashCommand(str) end
+
+end)
+
+StaticPopupDialogs["RELOAD"] = {
+	text = L["åˆ‡æ¢å¸ƒå±€ä½ éœ€è¦é‡æ–°åŠ è½½æ’ä»¶ã€‚"],
+	OnAccept = function() 
+		ReloadUI() 
+	end,
+	OnCancel = function() end ,
+	button1 = ACCEPT,
+	button2 = CANCEL,
+	timeout = 0,
+	whileDead = 1,
+}
 
 SlashCmdList["RELOADUI"] = function() ReloadUI() end
-SLASH_RELOADUI1 = "/rl"--ÖØÔØÃüÁî
+SLASH_RELOADUI1 = "/rl"--é‡è½½å‘½ä»¤
 
-local _G = _G  --½â¾öÍ·ÏñÔÚ»»ÀàËÆÌì¸³£¬·ûÎÄµÄÊ±ºò³öÏÖ±©Ñ©½ûÓÃ²å¼şµÄÇé¿ö¡£
+local _G = _G  --è§£å†³å¤´åƒåœ¨æ¢ç±»ä¼¼å¤©èµ‹ï¼Œé›•æ–‡çš„æ—¶å€™å‡ºç°æš´é›ªç¦ç”¨æ’ä»¶çš„æƒ…å†µã€‚
 local _, class = UnitClass("player")
+ 
+---------------------------------------------------
+-- æ ‡å‡†é…ç½®
+---------------------------------------------------
 
----------------------------------------------------
--- ±ê×¼ÅäÖÃ
----------------------------------------------------
-UnitFrames = {}
-UnitFrames.config = {
----2¸ö²¼¾ÖÑ¡1.»òÕß¶¼²»Ñ¡Ôñ£¨×¢Òâ£ºÏÂÃæPVP²¼¾ÖºÍPVE²¼¾Ö²»ÄÜÍ¬Ê±¿ªÆô[= true]£¬µ«ÊÇ¿ÉÒÔÍ¬Ê±¹Ø±Õ[= false]£¬µ±Í¬Ê±¹Ø±Õ[= false]Ê±½«»Ö¸´Ô­ÏµÍ³¶¨Òå²¼¾Ö)
-    PVE_Style = false,              -- true or false ÊÇ·ñÊ¹ÓÃPVE²¼¾Ö£¨×¢Òâ£ºPVP²¼¾ÖºÍPVE²¼¾Ö²»ÄÜÍ¬Ê±¿ªÆô[= true]µ«ÊÇ¿ÉÒÔÍ¬Ê±¹Ø±Õ[= false])
-	PVP_Style = false,              -- true or false ÊÇ·ñÊ¹ÓÃPVP²¼¾Ö£¨×¢Òâ£ºPVP²¼¾ÖºÍPVE²¼¾Ö²»ÄÜÍ¬Ê±¿ªÆô[= true]µ«ÊÇ¿ÉÒÔÍ¬Ê±¹Ø±Õ[= false])
----2¸ö²¼¾ÖÑ¡1.»òÕß¶¼²»Ñ¡Ôñ£¨×¢Òâ£ºÉÏÃæPVP²¼¾ÖºÍPVE²¼¾Ö²»ÄÜÍ¬Ê±¿ªÆô[= true]£¬µ«ÊÇ¿ÉÒÔÍ¬Ê±¹Ø±Õ[= false]£¬µ±Í¬Ê±¹Ø±Õ[= false]Ê±½«»Ö¸´Ô­ÏµÍ³¶¨Òå²¼¾Ö)
-    classTarget = false,            -- true or false ÊÇ·ñÆäËûµ¥Î»ÏÔÊ¾Ö°ÒµÍ¼±ê
-	SetRune = false,                -- true or false ÊÇ·ñ¸Ä±ä·ûÎÄµÄÑùÊ½ºÍÎ»ÖÃ£¬£¨¸Ä±äµÄ»°Ëü½«ÔÚÆÁÄ»ÖĞÏÂÎ»ÖÃÒÔ»¡ĞÎÅÅÁĞ£©
-    classColorPlayer = true,        -- true or false ÊÇ·ñäÖÈ¾Íæ¼ÒÖ°Òµ¿òÌåÑÕÉ«
-    classColorTarget = true,        -- true or false ÊÇ·ñäÖÈ¾Ä¿±êÖ°Òµ¿òÌåÑÕÉ«
-    classColorFocus = true,         -- true or false ÊÇ·ñäÖÈ¾½¹µãÖ°Òµ¿òÌåÑÕÉ«
-    classColorParty = true,         -- true or false ÊÇ·ñäÖÈ¾¶ÓÎéÖ°Òµ¿òÌåÑÕÉ«
-    repositionPartyText = false,    -- true or false ÊÇ·ñÖØĞÂ¶¨Î»¶ÓÎéÎÄ±¾
+local eventframe = CreateFrame'Frame'
+eventframe:RegisterEvent('ADDON_LOADED')
+
+eventframe:SetScript('OnEvent', function(self, event, name)
+
+	if(name ~= "MyUnitframes") then return end
+	self:UnregisterEvent('ADDON_LOADED')
+	
+	UnitFrames = {}
+	MyUnitframesDB = MyUnitframesDB or {}             --åˆå§‹åŒ–DB 	
+	UnitFrames.config = {
+	PVE_Style = MyUnitframesDB.PVE_Style or false ,             -- true or false æ˜¯å¦ä½¿ç”¨PVEå¸ƒå±€ï¼ˆæ³¨æ„ï¼šPVPå¸ƒå±€å’ŒPVEå¸ƒå±€ä¸èƒ½åŒæ—¶å¼€å¯[= true]ä½†æ˜¯å¯ä»¥åŒæ—¶å…³é—­[= false])
+    PVP_Style = MyUnitframesDB.PVP_Style or false  ,            -- true or false æ˜¯å¦ä½¿ç”¨PVPå¸ƒå±€ï¼ˆæ³¨æ„ï¼šPVPå¸ƒå±€å’ŒPVEå¸ƒå±€ä¸èƒ½åŒæ—¶å¼€å¯[= true]ä½†æ˜¯å¯ä»¥åŒæ—¶å…³é—­[= false])
+    classTarget = false,            -- true or false æ˜¯å¦å…¶ä»–å•ä½æ˜¾ç¤ºèŒä¸šå›¾æ ‡
+	SetRune = false,                -- true or false æ˜¯å¦æ”¹å˜ç¬¦æ–‡çš„æ ·å¼å’Œä½ç½®ï¼Œï¼ˆæ”¹å˜çš„è¯å®ƒå°†åœ¨å±å¹•ä¸­ä¸‹ä½ç½®ä»¥å¼§å½¢æ’åˆ—ï¼‰
+    classColorPlayer = true,        -- true or false æ˜¯å¦æ¸²æŸ“ç©å®¶èŒä¸šæ¡†ä½“é¢œè‰²
+    classColorTarget = true,        -- true or false æ˜¯å¦æ¸²æŸ“ç›®æ ‡èŒä¸šæ¡†ä½“é¢œè‰²
+    classColorFocus = true,         -- true or false æ˜¯å¦æ¸²æŸ“ç„¦ç‚¹èŒä¸šæ¡†ä½“é¢œè‰²
+    classColorParty = true,         -- true or false æ˜¯å¦æ¸²æŸ“é˜Ÿä¼èŒä¸šæ¡†ä½“é¢œè‰²
+    repositionPartyText = false,    -- true or false æ˜¯å¦é‡æ–°å®šä½é˜Ÿä¼æ–‡æœ¬
     largeAuraSize = 24,             -- Blizzard default value is 21
     smallAuraSize = 18,             -- Blizzard default value is 17
-    customStatusText = true,        -- true or false (ÊÇ·ñ×Ô¶¨Òå×´Ì¬ÎÄ±¾)
-    autoManaPercent = true,         -- true or false (ÊÇ·ñÓÃ°Ù·Ö±ÈÏÔÊ¾·¨Á¦Öµ)
-    thousandSeparators = true,      -- true or false  ÊÇ·ñÔÚ1000...1000.000...1000.000.000µÄ.ÉÏÌí¼Ó¿ÕÎ»¸ô·û
-    simpleHealth = true,            -- ÊÇ·ñÓÃK.M.GÀ´¾«¼ò¼ÆÊı 199.999 (200.000 to 200 k, 3.000.000 to 3 m)
-	RaidHide = false,               -- ÊÇ·ñÒş²Ø±©Ñ©ÏµÍ³ÍÅ¶Ó¿òÌå
+    customStatusText = true,        -- true or false (æ˜¯å¦è‡ªå®šä¹‰çŠ¶æ€æ–‡æœ¬)
+    autoManaPercent = true,         -- true or false (æ˜¯å¦ç”¨ç™¾åˆ†æ¯”æ˜¾ç¤ºæ³•åŠ›å€¼)
+    thousandSeparators = true,      -- true or false  æ˜¯å¦åœ¨1000...1000.000...1000.000.000çš„.ä¸Šæ·»åŠ ç©ºä½éš”ç¬¦
+    simpleHealth = true,            -- æ˜¯å¦ç”¨K.M.Gæ¥ç²¾ç®€è®¡æ•° 199.999 (200.000 to 200 k, 3.000.000 to 3 m)
+	RaidHide = false,               -- æ˜¯å¦éšè—æš´é›ªç³»ç»Ÿå›¢é˜Ÿæ¡†ä½“
 }
 
 UnitFrames.config.phrases = {
     ["1000 separator"] = " ",
-    ["Dead"] = "|cFFFFFFFFËÀÍö|r",
-    ["Ghost"] = "|cFFFFFFFF¹í»ê|r",
-    ["Offline"] = "|cFFFFFFFFëx¾Q|r",
+    ["Dead"] = L["|cFFFFFFFFæ­»äº¡|r"],
+    ["Ghost"] = L["|cFFFFFFFFé¬¼é­‚|r"],
+    ["Offline"] = L["|cFFFFFFFFç¦»çº¿|r"],
     ["kilo"] = " k",  -- simpleHealth 1.000
     ["mega"] = " m",  -- simpleHealth 1.000.000
     ["giga"] = " g",  -- simpleHealth 1.000.000.000
 }
 
---[[ ÉèÖÃÎ»ÖÃ ]]
+--[[ è®¾ç½®ä½ç½® ]]
 
 if UnitFrames.config.PVE_Style then
---PVE²¼¾Ö
+--PVEå¸ƒå±€
 TargetFrame:ClearAllPoints() 
-TargetFrame:SetPoint("CENTER", 200, -165) --Ä¿±ê¿òÌåÎ»ÖÃ
+TargetFrame:SetPoint("CENTER", 200, -165) --ç›®æ ‡æ¡†ä½“ä½ç½®
 
 TargetFrameToT:ClearAllPoints()
-TargetFrameToT:SetPoint("LEFT",TargetFrame,"Top", -15, -1)  --Ä¿±êµÄÄ¿±êµÄ¿òÌåÎ»ÖÃ
+TargetFrameToT:SetPoint("LEFT",TargetFrame,"Top", -15, -1)  --ç›®æ ‡çš„ç›®æ ‡çš„æ¡†ä½“ä½ç½®
 
 TargetFrameToTTextureFrameName:ClearAllPoints() 
-TargetFrameToTTextureFrameName:SetPoint("LEFT",TargetFrameToT,"Top", -1, -8)  --Ä¿±êµÄÄ¿±êµÄÃû×ÖÎ»ÖÃ
+TargetFrameToTTextureFrameName:SetPoint("LEFT",TargetFrameToT,"Top", -1, -8)  --ç›®æ ‡çš„ç›®æ ‡çš„åå­—ä½ç½®
 
-FocusFrame:SetPoint("TOPLEFT", 250, -140) --½¹µãµÄ¿òÌåÎ»ÖÃ
-FocusFrameToT:SetPoint("BOTTOMRIGHT", -35, -13)  --½¹µãÄ¿±êµÄ¿òÌåÎ»ÖÃ
+FocusFrame:SetPoint("TOPLEFT", 250, -140) --ç„¦ç‚¹çš„æ¡†ä½“ä½ç½®
+FocusFrameToT:SetPoint("BOTTOMRIGHT", -35, -13)  --ç„¦ç‚¹ç›®æ ‡çš„æ¡†ä½“ä½ç½®
 
 PartyMemberFrame1:ClearAllPoints() 
-PartyMemberFrame1:SetPoint("TOPLEFT", 150, -240)  --¶ÓÎéµÄ¿òÌåÎ»ÖÃ
+PartyMemberFrame1:SetPoint("TOPLEFT", 150, -240)  --é˜Ÿä¼çš„æ¡†ä½“ä½ç½®
 
 Boss1TargetFrame:ClearAllPoints() 
-Boss1TargetFrame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-140,-430) --BOSS¿òÌåµÄÎ»ÖÃ
+Boss1TargetFrame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-140,-430) --BOSSæ¡†ä½“çš„ä½ç½®
 Boss1TargetFrame.SetPoint=function()end
 
 TargetFrameSpellBar:ClearAllPoints()
-TargetFrameSpellBar:SetPoint("CENTER", UIParent, "CENTER", 0, -80) ---Ä¿±êÊ©·¨ÌõµÄÎ»ÖÃ
+TargetFrameSpellBar:SetPoint("CENTER", UIParent, "CENTER", 0, -80) ---ç›®æ ‡æ–½æ³•æ¡çš„ä½ç½®
 TargetFrameSpellBar.SetPoint=function()end
 
---[[ Íæ¼Ò¿òÌå¹Ì¶¨ ]]
+--[[ ç©å®¶æ¡†ä½“å›ºå®š ]]
 local function ScrewYouPlayerFrame()
 	PlayerFrame:ClearAllPoints()
-	PlayerFrame:SetPoint("CENTER", -200, -165) --Íæ¼Ò¿òÌåµÄÎ»ÖÃ
+	PlayerFrame:SetPoint("CENTER", -200, -165) --ç©å®¶æ¡†ä½“çš„ä½ç½®
  end
 
 hooksecurefunc("PlayerFrame_AnimateOut", function() PlayerFrame:SetAlpha(0); ScrewYouPlayerFrame() end)
@@ -79,27 +132,27 @@ hooksecurefunc("PlayerFrame_SequenceFinished", function() PlayerFrame:SetAlpha(1
 hooksecurefunc("PlayerFrame_UpdateStatus", ScrewYouPlayerFrame)
 
 elseif UnitFrames.config.PVP_Style then
---PVP²¼¾Ö
+--PVPå¸ƒå±€
 TargetFrame:ClearAllPoints() 
-TargetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",100,-90) --Ä¿±ê¿òÌåÎ»ÖÃ
+TargetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",100,-90) --ç›®æ ‡æ¡†ä½“ä½ç½®
 
 PetFrame:ClearAllPoints() 
-PetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",-220,-20) --Ä¿±ê¿òÌåÎ»ÖÃ
+PetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",-220,-20) --ç›®æ ‡æ¡†ä½“ä½ç½®
 
 PartyMemberFrame1:ClearAllPoints() 
-PartyMemberFrame1:SetPoint("TOPLEFT", 10, -200)  --¶ÓÎéµÄ¿òÌåÎ»ÖÃ
+PartyMemberFrame1:SetPoint("TOPLEFT", 10, -200)  --é˜Ÿä¼çš„æ¡†ä½“ä½ç½®
 
-FocusFrame:SetPoint("TOPLEFT", 250, -500) --½¹µãµÄ¿òÌåÎ»ÖÃ
-FocusFrameToT:SetPoint("BOTTOMRIGHT", -35, -13)  --½¹µãÄ¿±êµÄ¿òÌåÎ»ÖÃ
+FocusFrame:SetPoint("TOPLEFT", 250, -500) --ç„¦ç‚¹çš„æ¡†ä½“ä½ç½®
+FocusFrameToT:SetPoint("BOTTOMRIGHT", -35, -13)  --ç„¦ç‚¹ç›®æ ‡çš„æ¡†ä½“ä½ç½®
 
 Boss1TargetFrame:ClearAllPoints() 
-Boss1TargetFrame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-140,-430) --BOSS¿òÌåµÄÎ»ÖÃ
+Boss1TargetFrame:SetPoint("TOPRIGHT",UIParent,"TOPRIGHT",-140,-430) --BOSSæ¡†ä½“çš„ä½ç½®
 Boss1TargetFrame.SetPoint=function()end
 
---[[ Íæ¼Ò¿òÌå¹Ì¶¨ ]]
+--[[ ç©å®¶æ¡†ä½“å›ºå®š ]]
 local function ScrewYouPlayerFrame()
 	PlayerFrame:ClearAllPoints()
-	PlayerFrame:SetPoint("TOPLEFT", 150, -150) --Íæ¼Ò¿òÌåµÄÎ»ÖÃ
+	PlayerFrame:SetPoint("TOPLEFT", 150, -150) --ç©å®¶æ¡†ä½“çš„ä½ç½®
  end
 
 hooksecurefunc("PlayerFrame_AnimateOut", function() PlayerFrame:SetAlpha(0); ScrewYouPlayerFrame() end)
@@ -107,12 +160,12 @@ hooksecurefunc("PlayerFrame_SequenceFinished", function() PlayerFrame:SetAlpha(1
 hooksecurefunc("PlayerFrame_UpdateStatus", ScrewYouPlayerFrame)
 
 else 
---Ô­ÏµÍ³ÑùÊ½
+--åŸç³»ç»Ÿæ ·å¼
 PartyMemberFrame1:ClearAllPoints() 
-PartyMemberFrame1:SetPoint("TOPLEFT", 10, -120)  --¶ÓÎéµÄ¿òÌåÎ»ÖÃ
+PartyMemberFrame1:SetPoint("TOPLEFT", 10, -120)  --é˜Ÿä¼çš„æ¡†ä½“ä½ç½®
  end
 
---[[ Ëõ·ÅÉèÖÃ ]]
+--[[ ç¼©æ”¾è®¾ç½® ]]
 PlayerFrame:SetScale("1.0")
 TargetFrame:SetScale("1.0")
 for i=1,4 do _G["PartyMemberFrame"..i]:SetScale("1.3") end
@@ -122,7 +175,7 @@ Boss3TargetFrame:SetScale("1.0")
 TargetFrameSpellBar:SetScale("1.1")
 ComboFrame:SetScale("1.1")
 
---[[ Íæ¼ÒÊ©·¨Ìõ ]]
+--[[ ç©å®¶æ–½æ³•æ¡ ]]
 local cbf = "CastingBarFrame"
 local cbbs = "Interface\\CastingBar\\UI-CastingBar-Border-Small"
 local cbfs = "Interface\\CastingBar\\UI-CastingBar-Flash-Small"
@@ -138,14 +191,14 @@ _G[cbf.."Flash"]:SetTexture(cbfs)
 _G[cbf.."Text"]:SetPoint("TOP", _G[cbf], 0, 4)
 _G[cbf]:ClearAllPoints()
 if UnitFrames.config.PVE_Style then
-_G[cbf]:SetPoint("TOP", WorldFrame, "BOTTOM", 0, 130) --×Ô¼ºÊ©·¨ÌõµÄÎ»ÖÃ
+_G[cbf]:SetPoint("TOP", WorldFrame, "BOTTOM", 0, 130) --è‡ªå·±æ–½æ³•æ¡çš„ä½ç½®
 _G[cbf].SetPoint = function() end
 end
 _G[cbf.."Icon"]:Show()
 _G[cbf.."Icon"]:SetHeight(20)
 _G[cbf.."Icon"]:SetWidth(20)
 
---[[ Ê©·¨¼ÆÊ±]]
+--[[ æ–½æ³•è®¡æ—¶]]
 _G[cbf].timer = _G[cbf]:CreateFontString(nil)
 _G[cbf].timer:SetFont(GameFontNormal:GetFont(), 14, "THINOUTLINE")
 _G[cbf].timer:SetPoint("RIGHT", _G[cbf], "RIGHT", 24, 0)
@@ -179,21 +232,21 @@ hooksecurefunc("CastingBarFrame_OnUpdate", function(self, elapsed)
 	end
 end)
 
---[[ ½¹µãÊ©·¨Ìõ ]]
+--[[ ç„¦ç‚¹æ–½æ³•æ¡ ]]
 hooksecurefunc(FocusFrameSpellBar, "Show", function()
     FocusFrameSpellBar:SetScale("1.1")
 	if UnitFrames.config.PVE_Style then
 	FocusFrameSpellBar:ClearAllPoints()
-	FocusFrameSpellBar:SetPoint("CENTER", UIParent, "CENTER", 0, 200)  --½¹µãÊ©·¨ÌõµÄÎ»ÖÃ
+	FocusFrameSpellBar:SetPoint("CENTER", UIParent, "CENTER", 0, 200)  --ç„¦ç‚¹æ–½æ³•æ¡çš„ä½ç½®
 	FocusFrameSpellBar.SetPoint = function() end
 	end
 end)
 FocusFrameSpellBar:SetStatusBarColor(0,0.45,0.9); FocusFrameSpellBar.SetStatusBarColor = function() end
 
 if UnitFrames.config.SetRune or UnitFrames.config.PVE_Style then
---[[ ·ûÎÄ ]]
+--[[ ç¬¦æ–‡ ]]
 RuneFrame:ClearAllPoints() 
-RuneFrame:SetPoint("CENTER",UIParent,"CENTER",0,-170) --·ûÎÄµÄ¿òÌåÎ»ÖÃ
+RuneFrame:SetPoint("CENTER",UIParent,"CENTER",0,-170) --ç¬¦æ–‡çš„æ¡†ä½“ä½ç½®
 RuneFrame.SetPoint = function() end
 for i=1,6 do _G["RuneButtonIndividual"..i]:SetScale("1.1") end
 for i=1,6 do _G["RuneButtonIndividual"..i]:ClearAllPoints() end
@@ -205,15 +258,15 @@ RuneButtonIndividual5:SetPoint("LEFT",RuneButtonIndividual4,"RIGHT",4,8)
 RuneButtonIndividual6:SetPoint("LEFT",RuneButtonIndividual5,"RIGHT",4,8)
 end
 
---[[ Òş²ØpvpÍ¼±ê ]]
+--[[ éšè—pvpå›¾æ ‡ ]]
 PlayerPVPIcon:SetAlpha(0)
 TargetFrameTextureFramePVPIcon:SetAlpha(0)
 
---[[ Òş²ØÕ½¶·ÉËº¦ÎÄ±¾ ]]
+--[[ éšè—æˆ˜æ–—ä¼¤å®³æ–‡æœ¬ ]]
 PetHitIndicator:ClearAllPoints() 
 PlayerHitIndicator:ClearAllPoints()
 
---[[ Í¼±ê ]]
+--[[ å›¾æ ‡ ]]
 if UnitFrames.config.classTarget then
 UFP = "UnitFramePortrait_Update"; 
 UICC = "Interface\\TargetingFrame\\UI-Classes-Circles"; 
@@ -229,7 +282,7 @@ end
 
 
 ---------------------------------------------------
--- ÌØ¶¨ÅäÖÃ
+-- ç‰¹å®šé…ç½®
 ---------------------------------------------------
 if class == "PRIEST" then
     UnitFrames.config.largeAuraSize = 24
@@ -276,7 +329,7 @@ local color = nil
 local h, hMax, hPercent, m, mMax, mPercent = 0
 
 ---------------------------------------------------
--- ¶ÓÎé
+-- é˜Ÿä¼
 ---------------------------------------------------
 local function partyMembersChanged()
     local partyMembers = GetNumSubgroupMembers()
@@ -298,7 +351,7 @@ local function partyMembersChanged()
 end
 
 ---------------------------------------------------
--- Íæ¼Ò¿ò¼Ü
+-- ç©å®¶æ¡†æ¶
 ---------------------------------------------------
 local function playerFrame()
     if not UnitHasVehicleUI("player") then
@@ -344,7 +397,7 @@ hooksecurefunc("PlayerFrame_UpdateArt", playerFrame)
 hooksecurefunc("PlayerFrame_SequenceFinished", playerFrame)
 
 ---------------------------------------------------
--- Ä¿±ê¿òÌå
+-- ç›®æ ‡æ¡†ä½“
 ---------------------------------------------------
 local function targetFrame()
 	TargetFrame.Background:SetPoint("TOPLEFT",7,-22);
@@ -383,9 +436,9 @@ local function targetChanged()
 end
 hooksecurefunc("TargetFrame_CheckFaction", targetChanged)
 
--- À´×ÔTargetFrame.luaÊØÔò
+-- æ¥è‡ªTargetFrame.luaå®ˆåˆ™
 function targetUpdateAuraPositions(self, auraName, numAuras, numOppositeAuras, largeAuraList, updateFunc, maxRowWidth, offsetX)
-    -- ¹â»·¶¨Î»
+    -- å…‰ç¯å®šä½
     local AURA_OFFSET_Y = 3;
     local LARGE_AURA_SIZE = config.largeAuraSize;
     local SMALL_AURA_SIZE = config.smallAuraSize;
@@ -421,7 +474,7 @@ hooksecurefunc("TargetFrame_UpdateAuraPositions", targetUpdateAuraPositions)
 
 
 ---------------------------------------------------
--- ½¹µã¿òÌå
+-- ç„¦ç‚¹æ¡†ä½“
 ---------------------------------------------------
 local function focusFrame()
 	FocusFrame.Background:SetPoint("TOPLEFT",7,-22);
@@ -457,7 +510,7 @@ local function focusChanged()
 end
 
 ---------------------------------------------------
--- ¶ÓÎé¿òÌå 
+-- é˜Ÿä¼æ¡†ä½“ 
 ---------------------------------------------------
 
     PartyMemberFrame1HealthBar:ClearAllPoints()
@@ -486,7 +539,7 @@ end
     PartyMemberFrame4ManaBar:SetHeight(4)
 
 ---------------------------------------------------
--- ÎÄ±¾
+-- æ–‡æœ¬
 ---------------------------------------------------
 local function createFrame(name, parent, point, xOffset, yOffset, width, alignment)
     local f = CreateFrame("Frame", name, parent)
@@ -618,7 +671,7 @@ local function unitText(unit)
 end
 
 ---------------------------------------------------
--- ¸üĞÂ
+-- æ›´æ–°
 ---------------------------------------------------
 if config.customStatusText then
     function PlayerFrameHealthBarText:Show() end
@@ -647,7 +700,7 @@ local function cvarUpdate()
 end
 
 ---------------------------------------------------
--- ÊÂ¼ş
+-- äº‹ä»¶
 ---------------------------------------------------
 local w = CreateFrame("Frame")
 w:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -686,7 +739,7 @@ function w:OnEvent(event, ...)
 end
 w:SetScript("OnEvent", w.OnEvent)
 
---Òş²ØÏµÍ³ÍÅ¶Ó
+--éšè—ç³»ç»Ÿå›¢é˜Ÿ
 
 if UnitFrames.config.RaidHide then
  local f = CreateFrame("Frame", nil, UIParent)
@@ -698,3 +751,5 @@ if UnitFrames.config.RaidHide then
 			CompactRaidFrameContainer:Hide()
     end)
 end
+end)
+
