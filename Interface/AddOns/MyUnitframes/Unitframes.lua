@@ -6,6 +6,9 @@ return key;
 end 
 setmetatable(L, {__index=defaultFunc}); 
 
+local _G = _G  --解决头像在换类似天赋，雕文的时候出现暴雪禁用插件的情况。
+local _, class = UnitClass("player")
+
  --头像布局切换设置：[PVP布局:/My pvp]，[PVE布局:/My pve] 注意命令后面的大小写必须一致！
 local function slashCommand(str)
 	if (str == 'pvp') then
@@ -47,9 +50,6 @@ StaticPopupDialogs["RELOAD"] = {
 
 SlashCmdList["RELOADUI"] = function() ReloadUI() end
 SLASH_RELOADUI1 = "/rl"--重载命令
-
-local _G = _G  --解决头像在换类似天赋，雕文的时候出现暴雪禁用插件的情况。
-local _, class = UnitClass("player")
  
 ---------------------------------------------------
 -- 标准配置
@@ -69,7 +69,7 @@ eventframe:SetScript('OnEvent', function(self, event, name)
 	PVE_Style = MyUnitframesDB.PVE_Style or false ,   -- true or false 是否使用PVE布局（注意：PVP布局和PVE布局不能同时开启[= true]但是可以同时关闭[= false])
     PVP_Style = MyUnitframesDB.PVP_Style or false ,   -- true or false 是否使用PVP布局（注意：PVP布局和PVE布局不能同时开启[= true]但是可以同时关闭[= false])
     classTarget = false,            -- true or false 是否其他单位显示职业图标
-	SetAbility = false,             -- true or false 是否改变符文,真气，灵魂石等各个职业能力框体位置及样式（PVP布局默认开启，其他布局如需关闭转到257行设置）
+	SetAbility = false,             -- true or false 是否改变符文,真气，灵魂石等各个职业能力框体位置及样式（PVP布局默认开启，其他布局如需关闭转到216行设置）
     classColorPlayer = true,        -- true or false 是否渲染玩家职业框体颜色
     classColorTarget = true,        -- true or false 是否渲染目标职业框体颜色
     classColorFocus = true,         -- true or false 是否渲染焦点职业框体颜色
@@ -137,6 +137,9 @@ if class == "WARLOCK" then
 TargetFrame:ClearAllPoints() 
 TargetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",100,-150) --术士的目标框体位置（由于目前术士宠物位置我没办法定义只能这样做了，不喜欢的建议用PVE布局）
 elseif class == "ROGUE" or  class == "WARRIOR" or class == "HUNTER" or class == "MAGE" then
+TargetFrame:ClearAllPoints() 
+TargetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",100,-125) --当玩家是萨满时的目标框体位置
+elseif class == "SHAMAN" then
 TargetFrame:ClearAllPoints() 
 TargetFrame:SetPoint("TOPRIGHT",PlayerFrame,"TOPRIGHT",100,-65) --当玩家是盗贼，战士，猎人和法师时的目标框体位置
 else
@@ -257,7 +260,7 @@ FocusFrameSpellBar:SetStatusBarColor(0,0.45,0.9); FocusFrameSpellBar.SetStatusBa
 if UnitFrames.config.SetAbility or UnitFrames.config.PVP_Style then  --如果想PVP布局关闭请将此行改成：if UnitFrames.config.SetAbility then
 --[[ 符文 ]]
 RuneFrame:ClearAllPoints() 
-RuneFrame:SetPoint("CENTER",UIParent,"CENTER",0,-170) --符文的框体位置
+RuneFrame:SetPoint("CENTER",UIParent,"CENTER",0,-160) --符文的框体位置
 RuneFrame.SetPoint = function() end
 for i=1,6 do _G["RuneButtonIndividual"..i]:SetScale("1.1") end
 for i=1,6 do _G["RuneButtonIndividual"..i]:ClearAllPoints() end

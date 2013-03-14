@@ -3,5 +3,4 @@
 	
 	<Script file='Unitframes.lua' />
 	<Script file='color.lua' />
-	<Script file='Classcolors.lua' />
 </Ui>
