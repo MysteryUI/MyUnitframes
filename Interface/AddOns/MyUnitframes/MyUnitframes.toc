@@ -1,9 +1,9 @@
-﻿## Interface: 50200
+﻿## Interface: 50400
 ## Author: Mystery
 ## Title: |cff777777|rMyUnitframes
 ## Notes-zhCN: |cffbc8f8f系统头像|r|cffb70000增强|r
 ## Notes-zhTW: |cffbc8f8f系統頭像|r|cffb70000增強|r
-## Version: V5.2
+## Version: V5.4
 ## SavedVariablesPerCharacter: MyUnitframesDB
 ## X-WoWBox-Ver: 1
 ## X-WoWBox-ID: 3485
