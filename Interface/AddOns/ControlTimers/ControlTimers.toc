@@ -5,9 +5,9 @@
 ## Notes-zhTW: |cffbc8f8f系統頭像上|r|cffb70000顯示控制技能。|r
 ## Version: V5.4
 ## SavedVariablesPerCharacter: ControlTimersDB
-## RequiredDeps: MyUnitframes
+
 ## X-WoWBox-Ver: 1
-## X-WoWBox-ID: 3485
+## X-WoWBox-ID: 3340
 
 localization.lua
 Config.lua
