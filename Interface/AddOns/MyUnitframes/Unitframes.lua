@@ -80,8 +80,8 @@ eventframe:SetScript('OnEvent', function(self, event, name)
     customStatusText = true,        -- true or false (是否自定义状态文本)
     autoManaPercent = true,         -- true or false (是否用百分比显示法力值)
     thousandSeparators = true,      -- true or false  是否在1000...1000.000...1000.000.000的.上添加空位隔符
-    simpleHealth = true,            -- 是否用K.M.G来精简计数 199.999 (200.000 to 200 k, 3.000.000 to 3 m)如果采用此计数法请把下面ChinaCountingMethod = true改成false,
-	ChinaCountingMethod = false,    -- 是否采用中国传统计数方式，如果采用中国计数法请把上面simpleHealth = true,改成false,
+    simpleHealth = false,           -- 是否用K.M.G来精简计数 199.999 (200.000 to 200 k, 3.000.000 to 3 m)如果采用此计数法请把下面ChinaCountingMethod = true改成false,
+	ChinaCountingMethod = true,     -- 是否采用中国传统计数方式，如果采用中国计数法请把上面simpleHealth = false,改成true,
 	RaidHide = false,               -- 是否隐藏暴雪系统团队框体
 }
 
@@ -192,7 +192,7 @@ local cbf = "CastingBarFrame"
 local cbbs = "Interface\\CastingBar\\UI-CastingBar-Border-Small"
 local cbfs = "Interface\\CastingBar\\UI-CastingBar-Flash-Small"
 
-_G[cbf]:SetSize(140,10)
+_G[cbf]:SetSize(140,11)
 _G[cbf.."Border"]:SetSize(190,40)
 _G[cbf.."Border"]:SetPoint("TOP", _G[cbf], 0, 15)
 _G[cbf.."Border"]:SetTexture(cbbs)
@@ -213,19 +213,19 @@ _G[cbf.."Icon"]:SetWidth(20)
 --[[ 施法计时]]
 _G[cbf].timer = _G[cbf]:CreateFontString(nil)
 _G[cbf].timer:SetFont(GameFontNormal:GetFont(), 14, "THINOUTLINE")
-_G[cbf].timer:SetPoint("RIGHT", _G[cbf], "RIGHT", 25, 0)
+--_G[cbf].timer:SetPoint("RIGHT", _G[cbf], "RIGHT", 25, 1)
 _G[cbf].update = .1
 
 local tcbf = "TargetFrameSpellBar"
 _G[tcbf].timer = _G[tcbf]:CreateFontString(nil)
 _G[tcbf].timer:SetFont(GameFontNormal:GetFont(), 14, "THINOUTLINE")
-_G[tcbf].timer:SetPoint("RIGHT", _G[tcbf], "RIGHT", 25, 0)
+_G[tcbf].timer:SetPoint("RIGHT", _G[tcbf], "RIGHT", 25, 1)
 _G[tcbf].update = .1
 
 local fcbf = "FocusFrameSpellBar"
 _G[fcbf].timer = _G[fcbf]:CreateFontString(nil)
 _G[fcbf].timer:SetFont(GameFontNormal:GetFont(), 14, "THINOUTLINE")
-_G[fcbf].timer:SetPoint("RIGHT", _G[fcbf], "RIGHT", 25, 0)
+_G[fcbf].timer:SetPoint("RIGHT", _G[fcbf], "RIGHT", 25, 1)
 _G[fcbf].update = .1
 
 hooksecurefunc("CastingBarFrame_OnUpdate", function(self, elapsed)
@@ -586,6 +586,15 @@ local function createFrame(name, parent, point, xOffset, yOffset, width, alignme
     f.text:SetAllPoints(f)
     f.text:SetFontObject(TextStatusBarText)
     f.text:SetJustifyH(alignment)
+end
+--干掉该死的6.0霸权系统数值
+function TextStatusBar_UpdateTextStringWithValues(statusFrame)
+	if( statusFrame.LeftText and statusFrame.RightText ) then
+		statusFrame.LeftText:SetText("");
+		statusFrame.RightText:SetText("");
+		statusFrame.LeftText:Hide();
+		statusFrame.RightText:Hide();
+	end
 end
 
 createFrame("fplayerdead",        PlayerFrameHealthBar, "CENTER",  0, 0, 200, "CENTER")
